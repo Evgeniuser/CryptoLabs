@@ -22,8 +22,8 @@ public class Lab2_main {
         RSA_agent Alice = new RSA_agent("Alice");
         RSA_agent Bob = new RSA_agent("Bob");
 
-        long test,text;
-
+        long test = 12345,text;
+        System.out.println("RSA test: " + test + " " + Alice.EncryptMsg(Bob.getD(),Bob.getN(),test) + " " + Bob.DecryptMsg(Alice.EncryptMsg(Bob.getD(),Bob.getN(),test)));
         int t = InBuffer.limit();
         do{
             test = (long)InBuffer.getShort();
@@ -40,16 +40,15 @@ public class Lab2_main {
         OutBuffer= ByteBuffer.allocate(InBuffer.limit()/4);
         OutBuffer.position(0);
         t = InBuffer.capacity();
-        System.out.println(t);
+
         do{
-            System.out.println(t);
+
             test = InBuffer.getLong();
             text = Bob.DecryptMsg(test);
             OutBuffer.putShort((short) text);
             t-=16;
 
         }while(t>1 || t>0);
-        System.out.println(OutBuffer.capacity() + " " + OutBuffer.position());
         WriteFile("RSA_detest.txt",OutBuffer.array(),true);
 
         //RSA end
@@ -61,10 +60,10 @@ public class Lab2_main {
         Elgama_agent A = new Elgama_agent(pair.get(0),pair.get(1),"A");
         Elgama_agent B = new Elgama_agent(pair.get(0),pair.get(1),"B");
 
-        long tst = 123456;
+        long tst = 12345;
         long r = A.CrtSessionKey();
         long crt = A.Crypt(tst,B.getY());
-        System.out.println(tst + " " + crt + " " + B.Decrypt(r, crt));
+        System.out.println("Elgam test: " + tst + " " + crt + " " + B.Decrypt(r, crt));
         InBuffer = ReadFile("test.txt").position(0);
         OutBuffer.clear();
 
@@ -109,7 +108,7 @@ public class Lab2_main {
         tst1 = D.CrtX(tst1,C.getC());
         tst1 = C.DerX(tst1);
         tst1 = D.DerX(tst1);
-        System.out.println(tst + " " + tst1);
+        System.out.println("Shamir test: " + tst + " " + tst1);
 
         InBuffer.clear();
         InBuffer = ReadFile("test.txt").position(0);
@@ -126,7 +125,6 @@ public class Lab2_main {
             OutBuffer.putShort((short)text);
             t-=2;
         }while(t>1 || t>0);
-
         WriteFile("Shamir_detest.txt",OutBuffer.array(),false);
 
         //Shamir End

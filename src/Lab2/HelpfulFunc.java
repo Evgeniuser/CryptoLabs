@@ -24,7 +24,7 @@ public class HelpfulFunc {
     {
         RandomAccessFile as = new RandomAccessFile(FileName,"r");
         FileChannel fl = as.getChannel();
-        System.out.println("Размер файла: " + fl.size()+ " байт(а)");
+        //System.out.println("Размер файла: " + fl.size()+ " байт(а)");
         ByteBuffer InBuffer = ByteBuffer.allocate((int)fl.size()+1);
         fl.read(InBuffer);
         fl.close();
@@ -37,7 +37,7 @@ public class HelpfulFunc {
         if(wrFlg == true)
             fout.write(buffer,0,buffer.length/2-1);
         else
-            fout.write(buffer,0,buffer.length);
+            fout.write(buffer,0,buffer.length-1);
 
         fout.close();
 
