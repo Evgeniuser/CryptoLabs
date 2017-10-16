@@ -1,13 +1,13 @@
 package Lab2;
 
-import java.io.FileInputStream;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
-import java.nio.channels.ReadableByteChannel;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -22,21 +22,25 @@ public class HelpfulFunc {
 
     public static ByteBuffer ReadFile(String FileName) throws IOException
     {
-        RandomAccessFile as = new RandomAccessFile(FileName,"rw");
+        RandomAccessFile as = new RandomAccessFile(FileName,"r");
         FileChannel fl = as.getChannel();
         System.out.println("Размер файла: " + fl.size()+ " байт(а)");
         ByteBuffer InBuffer = ByteBuffer.allocate((int)fl.size()+1);
         fl.read(InBuffer);
-        InBuffer.put((int)fl.size(),(byte) 0x0);
         fl.close();
         return InBuffer;
     }
 
-    public static int WriteFile(String FileName,byte[] buffer) throws IOException
+    public static int WriteFile(String FileName,byte[] buffer,boolean wrFlg) throws IOException
     {
         FileOutputStream fout = new FileOutputStream(FileName);
-        fout.write(buffer,0,buffer.length);
+        if(wrFlg == true)
+            fout.write(buffer,0,buffer.length/2-1);
+        else
+            fout.write(buffer,0,buffer.length);
+
         fout.close();
+
         return 0;
     }
 
