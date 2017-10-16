@@ -16,13 +16,13 @@ public class Lab2_main {
     public static void main(String[] args) throws IOException {
 
         //RSA Begin
-        ByteBuffer InBuffer = ReadFile("test.txt"); ByteBuffer OutBuffer;
+        ByteBuffer InBuffer = ReadFile("test.txt").position(0); ByteBuffer OutBuffer;
         RSA_agent Alice = new RSA_agent("Alice");
         RSA_agent Bob = new RSA_agent("Bob");
         OutBuffer = ByteBuffer.allocate(InBuffer.limit()*8);
         long test,text;
         int t = InBuffer.limit();
-        InBuffer.position(0);
+
         do{
             test = (long)InBuffer.getShort();
             text = Alice.EncryptMsg(Bob.getD(),Bob.getN(),test);
@@ -33,10 +33,9 @@ public class Lab2_main {
         byte[] outBuffer = OutBuffer.array();
         WriteFile("RSA_crypt.txt",outBuffer);
         InBuffer.clear();
-        InBuffer = ReadFile("RSA_crypt.txt");
+        InBuffer = ReadFile("RSA_crypt.txt").position(0);
         OutBuffer.clear().position(0);
-        OutBuffer= ByteBuffer.allocate(InBuffer.position()/4);
-        InBuffer.position(0);
+        OutBuffer= ByteBuffer.allocate(InBuffer.limit()/4);
         t = InBuffer.capacity();
         System.out.println(t);
         do{
@@ -83,12 +82,10 @@ public class Lab2_main {
         outBuffer = OutBuffer.array();
         WriteFile("Elgam_crypt.txt",outBuffer);
         InBuffer.clear();
-        InBuffer = ReadFile("Elgam_crypt.txt");
+        InBuffer = ReadFile("Elgam_crypt.txt").position(0);
         OutBuffer.clear();
-        t = InBuffer.position();
-        InBuffer.position(0);
+        t = InBuffer.limit();
         OutBuffer = ByteBuffer.allocate(InBuffer.limit()/8);
-
         long text1, opR;
         do {
             opR = InBuffer.getLong();
@@ -113,9 +110,8 @@ public class Lab2_main {
         System.out.println(tst + " " + tst1);
 
         InBuffer.clear();
-        InBuffer = ReadFile("test.txt");
+        InBuffer = ReadFile("test.txt").position(0);
         t = InBuffer.limit();
-        InBuffer.position(0);
         OutBuffer.clear();
         OutBuffer = ByteBuffer.allocate(InBuffer.limit());
         do
