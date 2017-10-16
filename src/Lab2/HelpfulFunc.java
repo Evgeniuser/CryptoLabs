@@ -3,7 +3,11 @@ package Lab2;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.math.BigInteger;
+import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
+import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -16,15 +20,16 @@ public class HelpfulFunc {
 
     static Random rnd = new Random(17);
 
-    public static byte[] ReadFile(String FileName) throws IOException
+    public static ByteBuffer ReadFile(String FileName) throws IOException
     {
-        FileInputStream fin = new FileInputStream(FileName);
-        System.out.println("Размер файла: " + fin.available() + " байт(а)");
-        byte[] buffer = new byte[fin.available()+1];
-        // считаем файл в буфер
-        fin.read(buffer, 0, fin.available()+1);
-        fin.close();
-        return buffer;
+        RandomAccessFile as = new RandomAccessFile(FileName,"rw");
+        FileChannel fl = as.getChannel();
+        System.out.println("Размер файла: " + fl.size()+ " байт(а)");
+        ByteBuffer InBuffer = ByteBuffer.allocate((int)fl.size()+1);
+        fl.read(InBuffer);
+        InBuffer.put((int)fl.size(),(byte) 0x0);
+        fl.close();
+        return InBuffer;
     }
 
     public static int WriteFile(String FileName,byte[] buffer) throws IOException

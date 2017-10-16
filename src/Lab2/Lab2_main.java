@@ -15,17 +15,14 @@ public class Lab2_main {
 
     public static void main(String[] args) throws IOException {
 
-        byte[] buffer = ReadFile("test.txt");
-
         //RSA Begin
-        ByteBuffer InBuffer; ByteBuffer OutBuffer;
+        ByteBuffer InBuffer = ReadFile("test.txt"); ByteBuffer OutBuffer;
         RSA_agent Alice = new RSA_agent("Alice");
         RSA_agent Bob = new RSA_agent("Bob");
-
-        InBuffer = ByteBuffer.wrap(buffer,0,buffer.length);
-        OutBuffer = ByteBuffer.allocate(InBuffer.limit());
+        OutBuffer = ByteBuffer.allocate(InBuffer.limit()*8/2);
         long test,text;
         int t = InBuffer.limit();
+        InBuffer.position(0);
         do{
             test = (long)InBuffer.getShort();
             text = Bob.DecryptMsg(Alice.EncryptMsg(Bob.getD(),Bob.getN(),test));
@@ -34,8 +31,10 @@ public class Lab2_main {
 
         }while(t>1 || t!=0);
 
+        System.out.println(OutBuffer.capacity() + " " + OutBuffer.position());
         byte[] outBuffer = OutBuffer.array();
-        WriteFile("E://4course//Crypto//RSA_detest.txt",outBuffer);
+        WriteFile("RSA_detest.txt",outBuffer);
+
         //RSA end
 
         //Elgama Begin
@@ -52,22 +51,37 @@ public class Lab2_main {
         t = InBuffer.limit();
         InBuffer.position(0);
         OutBuffer.clear();
-        OutBuffer = ByteBuffer.allocate(InBuffer.limit());
-        r = A.CrtSessionKey();
+        OutBuffer = ByteBuffer.allocate(InBuffer.limit()*16);
         do
         {
+            r = A.CrtSessionKey();
             test = (long)InBuffer.getShort();
-            text = B.Decrypt(r,A.Crypt(test,B.getY()));
-            OutBuffer.putShort((short)text);
+            text = A.Crypt(test,B.getY());
+            OutBuffer.putLong(r);
+            OutBuffer.putLong(text);
             t-=2;
         }while(t>1 || t>0);
+
         outBuffer = OutBuffer.array();
-        WriteFile("E://4course//Crypto//Elgam_detest.txt",outBuffer);
+        WriteFile("Elgam_crypt.txt",outBuffer);
+        InBuffer.clear();
+        InBuffer = ReadFile("Elgam_crypt.txt");
+        OutBuffer.clear();
+        t = InBuffer.position();
+        InBuffer.position(0);
+        OutBuffer = ByteBuffer.allocate(InBuffer.limit()/8);
 
-
+        long text1, opR;
+        do {
+            opR = InBuffer.getLong();
+            text1 = InBuffer.getLong();
+            OutBuffer.putShort((short)B.Decrypt(opR,text1));
+            t-=16;
+        }while(t>1 || t> 0);
+        outBuffer = OutBuffer.array();
+        WriteFile("Elgam_detest.txt",outBuffer);
 
         //Elgama End
-
         //Shamir Begin
 
         Shamir_agent C = new Shamir_agent(pair.get(0),"C");
@@ -80,6 +94,8 @@ public class Lab2_main {
         tst1 = D.DerX(tst1);
         System.out.println(tst + " " + tst1);
 
+        InBuffer.clear();
+        InBuffer = ReadFile("test.txt");
         t = InBuffer.limit();
         InBuffer.position(0);
         OutBuffer.clear();
@@ -95,7 +111,7 @@ public class Lab2_main {
             t-=2;
         }while(t>1 || t>0);
         outBuffer = OutBuffer.array();
-        WriteFile("E://4course//Crypto//Shamir_detest.txt",outBuffer);
+        WriteFile("Shamir_detest.txt",outBuffer);
 
         //Shamir End
 
@@ -108,7 +124,7 @@ public class Lab2_main {
         byte[] qwe = {1,2,3,4,5};
 
         System.out.println(Arrays.equals(qwe,W.CryptOrDecrypt(Q.CryptOrDecrypt(qwe))));
-        System.out.println(Arrays.equals(buffer,W.CryptOrDecrypt(Q.CryptOrDecrypt(buffer))));
+        System.out.println(Arrays.equals(InBuffer.array(),W.CryptOrDecrypt(Q.CryptOrDecrypt(InBuffer.array()))));
 
         //Vernam End
 
