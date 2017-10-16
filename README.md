@@ -1,5 +1,5 @@
 # CryptoLabs
-Laboratory work, carried out as part of the data protection course 09.03.01
+Laboratory work, was done as part of the data protection course 09.03.01
 
 Lab1 includes the following algorithms
   - Baby-step giant-step 
