@@ -19,20 +19,37 @@ public class Lab2_main {
         ByteBuffer InBuffer = ReadFile("test.txt"); ByteBuffer OutBuffer;
         RSA_agent Alice = new RSA_agent("Alice");
         RSA_agent Bob = new RSA_agent("Bob");
-        OutBuffer = ByteBuffer.allocate(InBuffer.limit()*8/2);
+        OutBuffer = ByteBuffer.allocate(InBuffer.limit()*8);
         long test,text;
         int t = InBuffer.limit();
         InBuffer.position(0);
         do{
             test = (long)InBuffer.getShort();
-            text = Bob.DecryptMsg(Alice.EncryptMsg(Bob.getD(),Bob.getN(),test));
-            OutBuffer.putShort((short)text);
+            text = Alice.EncryptMsg(Bob.getD(),Bob.getN(),test);
+            OutBuffer.putLong(text);
             t-=2;
 
         }while(t>1 || t!=0);
+        byte[] outBuffer = OutBuffer.array();
+        WriteFile("RSA_crypt.txt",outBuffer);
+        InBuffer.clear();
+        InBuffer = ReadFile("RSA_crypt.txt");
+        OutBuffer.clear().position(0);
+        OutBuffer= ByteBuffer.allocate(InBuffer.position()/4);
+        InBuffer.position(0);
+        t = InBuffer.capacity();
+        System.out.println(t);
+        do{
+            System.out.println(t);
+            test = InBuffer.getLong();
+            text = Bob.DecryptMsg(test);
+            OutBuffer.putShort((short)text);
+            t-=16;
+
+        }while(t>1 || t>0);
 
         System.out.println(OutBuffer.capacity() + " " + OutBuffer.position());
-        byte[] outBuffer = OutBuffer.array();
+        outBuffer = OutBuffer.array();
         WriteFile("RSA_detest.txt",outBuffer);
 
         //RSA end
@@ -48,9 +65,10 @@ public class Lab2_main {
         long r = A.CrtSessionKey();
         long crt = A.Crypt(tst,B.getY());
         System.out.println(tst + " " + crt + " " + B.Decrypt(r, crt));
-        t = InBuffer.limit();
-        InBuffer.position(0);
+        InBuffer = ReadFile("test.txt").position(0);
         OutBuffer.clear();
+
+        t = InBuffer.limit();
         OutBuffer = ByteBuffer.allocate(InBuffer.limit()*16);
         do
         {
@@ -76,7 +94,7 @@ public class Lab2_main {
             opR = InBuffer.getLong();
             text1 = InBuffer.getLong();
             OutBuffer.putShort((short)B.Decrypt(opR,text1));
-            t-=16;
+            t-=32;
         }while(t>1 || t> 0);
         outBuffer = OutBuffer.array();
         WriteFile("Elgam_detest.txt",outBuffer);
