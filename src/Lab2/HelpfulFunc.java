@@ -1,6 +1,7 @@
 package Lab2;
 
 
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -11,6 +12,8 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 import java.util.Random;
 
+
+import java.security.MessageDigest;
 import static Lab1.MyMath.isPrimitive;
 import static Lab1.MyMath.modPow2;
 import static java.lang.Math.random;
@@ -80,6 +83,26 @@ public class HelpfulFunc {
         pair.add(G);
         return pair;
     }
+    public static ByteBuffer getHash(String filename) throws Exception
+    {
+        ByteBuffer HashStr;
+        MessageDigest md = MessageDigest.getInstance("SHA-1");
+        FileInputStream fl = new FileInputStream(filename);
 
+        byte[] dataByte = new byte[fl.available()];
+        fl.read(dataByte);
+        md.update(dataByte,0,dataByte.length);
+        dataByte = md.digest();
+        HashStr = ByteBuffer.wrap(dataByte);
+        StringBuffer hexString = new StringBuffer();
+        for(int i = 0;i<dataByte.length;i++)
+        {
+            HashStr.put(dataByte[i]);
+            hexString.append(Integer.toHexString(0xFF & dataByte[i]));
+        }
+        System.out.println("Hex format : " + hexString.toString());
+
+        return HashStr;
+    }
 
 }

@@ -3,11 +3,11 @@ package Lab2;
 
 import java.math.BigInteger;
 import java.util.Random;
-import java.util.function.BiFunction;
+
 
 import static Lab1.MyMath.*;
 
-import static java.lang.Math.max;
+
 import static java.lang.Math.random;
 import static java.math.BigInteger.probablePrime;
 
