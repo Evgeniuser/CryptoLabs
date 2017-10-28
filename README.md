@@ -10,8 +10,15 @@ Lab1 includes the next algorithms
   
 Lab2 includes the next algorithms
  - RSA
- - Elgamma
+ - Elgama
  - Vernam
  - Shamir
  
-  All the algorithms can encrypt and decrypt files with the exception of the Vernam's algorithm 
+  All the algorithms can encrypt and decrypt files with the exception of the Vernam's algorithm(encoding problem) 
+
+Lab3 includes the next DS algorithms
+  - GOST R-34.10-94
+  - RSA
+  - Elgama
+  
+  
