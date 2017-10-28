@@ -16,6 +16,9 @@ public class Elgama_DS {
     private BigInteger X;
     private SecureRandom Srnd = new SecureRandom();
     private BigInteger Fi;
+    private BigInteger k;
+    private BigInteger r;
+    BigInteger invk;
     Elgama_DS(BigInteger p,BigInteger g)
     {
         this.P = p;
@@ -25,20 +28,32 @@ public class Elgama_DS {
         Y = G.modPow(X,P);
         Fi = P.subtract(ONE);
     }
-
-
-    public BigInteger[] CreateSign(BigInteger msg)
+    private void CrtRK()
     {
-        BigInteger[] signPair = new BigInteger[2];
-        BigInteger k = new BigInteger(Fi.bitLength (),Srnd);
+        k = new BigInteger(Fi.bitLength (),Srnd);
         while(k.gcd(P).compareTo(ONE)!=0)
         {
             k = new BigInteger(Fi.bitLength (),Srnd);
         }
-        BigInteger r = G.modPow(k,P);
-        /* TODO: fix java.lang.ArithmeticException: BigInteger not invertible. */
-        BigInteger invk = k.modInverse(Fi);
+        r = G.modPow(k,P);
+    }
 
+    public BigInteger[] CreateSign(BigInteger msg)
+    {
+        BigInteger[] signPair = new BigInteger[2];
+        invk = new BigInteger("0");
+        CrtRK();
+
+        gen:
+        try {
+            invk = k.modInverse (Fi);
+        }
+        catch (ArithmeticException e)
+        {
+            System.out.println(e);
+            CrtRK();
+            break gen;
+        }
         BigInteger s = msg.subtract(X.multiply(r))
                           .multiply(invk)
                           .mod(Fi);

@@ -46,7 +46,7 @@ public class GOST_DS {
     {
         BigInteger R = RS[0];
         BigInteger S = RS[1];
-        BigInteger v = Hm.modPow(Q.subtract(BigInteger.TWO),Q);
+        BigInteger v = Hm.modPow(Q.subtract(BigInteger.TWO),Q);//H^(q-2)%Q
         BigInteger z1 = S.multiply(v).mod(Q);
         BigInteger z2 = Q.subtract(R).multiply(v).mod(Q);
 
