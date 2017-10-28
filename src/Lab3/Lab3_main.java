@@ -1,5 +1,6 @@
 package Lab3;
 
+import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import static Lab2.HelpfulFunc.*;
 
@@ -43,7 +44,9 @@ public class Lab3_main {
         }
         System.out.println("Hex format : " + hexString.toString());
 
-
+        GOST_DS A = new GOST_DS(GOSTgenParams(512));
+        BigInteger[] RS = A.CreateSign(new BigInteger(ld.array()));
+        System.out.println(A.VerifySign(RS,new BigInteger(ld.array())));
 
 
 
