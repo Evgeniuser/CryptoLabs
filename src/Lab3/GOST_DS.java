@@ -39,7 +39,6 @@ public class GOST_DS {
         SignMas[0] = r;
         SignMas[1] = s;
 
-        System.out.println(r.bitLength() + "\t" + s.bitLength());
         return SignMas;
     }
 

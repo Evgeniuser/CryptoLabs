@@ -7,20 +7,23 @@ import java.util.Random;
 
 import static Lab1.MyMath.*;
 import static java.lang.Math.random;
+import static java.math.BigInteger.ONE;
+import static java.math.BigInteger.ZERO;
 import static java.math.BigInteger.probablePrime;
 
 public class RSA_agent
 {
-    //private long P;
-    //private long Q;
-    private long C;
-    private long Fi;
+
+    private BigInteger C;
+    private BigInteger Fi;
 
     private BigInteger Q;
     private BigInteger P;
+
     private SecureRandom rnd = new SecureRandom();
-    public long N;
-    public long D;
+
+    public BigInteger D;
+    public BigInteger N;
     public String name;
 
     RSA_agent(String name)
@@ -29,10 +32,9 @@ public class RSA_agent
         Q = new BigInteger(String.valueOf(probablePrime(512 , rnd)));
         P = new BigInteger(String.valueOf(probablePrime(512 , rnd)));
 
-
         while(true)
         {
-            if(P.equals(Q))
+            if(Q.compareTo(P)==0)
             {
                 Q = new BigInteger(String.valueOf(probablePrime(512 , rnd)));
                 P = new BigInteger(String.valueOf(probablePrime(512 , rnd)));
@@ -40,35 +42,35 @@ public class RSA_agent
             break;
         }
 
-        N = P*Q;
-        Fi = (P-1)*(Q-1);
-        D = (long)(random() * Fi) + 1;
+        N = Q.multiply(P);
+        Fi = P.subtract(ONE).multiply(Q.subtract(ONE));
+        D = new BigInteger(Fi.bitLength (),rnd);
         while(true)
         {
-            if(gcd(Fi,D) == 1)
+            if(Fi.gcd(D).equals (ONE))
                 break;
             else
-                D = (long)(random() * Fi) + 1;
+                D = new BigInteger(Fi.bitLength(),rnd);
         }
 
 
-        C = AdvanceGcd(Fi,D);
+        C = D.modInverse(Fi);
 
-        if(C<0) C = C+Fi;
+        if(C.compareTo(ZERO)==0) C = C.add(Fi);
     }
 
-    public long getN() {return N;}
+    public BigInteger getN() {return N;}
 
-    public long getD() {return D;}
+    public BigInteger getD() {return D;}
 
-    public long EncryptMsg(long D, long N, long msg)
+    public BigInteger EncryptMsg(BigInteger D, BigInteger N, BigInteger msg)
     {
-        return modPow2(msg,D,N);
+        return msg.modPow(D,N);
     }
 
-    public long DecryptMsg(long msg)
+    public BigInteger DecryptMsg(BigInteger msg)
     {
-        return modPow2(msg, this.C, this.N);
+        return msg.modPow(this.C, this.N);
     }
 
 }

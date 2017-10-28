@@ -13,40 +13,23 @@ public class Lab3_main {
         RSA_agent Alice = new RSA_agent("Alice");
         String filename = "test.txt";
         ByteBuffer ld = getHash(filename).position(0);
-        ByteBuffer fld = ByteBuffer.allocate(ld.limit()*8);
-        int t = ld.capacity();
-
-        long tst;
-        do {
-
-            tst = (long)ld.get();
-            fld.putLong(Alice.DecryptMsg(tst));
-            t--;
-        }while(t>0);
-        fld.position(0);
-        t = fld.limit()/8;
-
-        ByteBuffer df = ByteBuffer.allocate(ld.capacity());
-
-        do {
-            tst = fld.getLong();
-            df.put((byte)Alice.EncryptMsg(Alice.D,Alice.N,tst));
-            t--;
-        }while(t>0);
+        BigInteger cryptMsg = Alice.DecryptMsg(new BigInteger(ld.array ()));
+        BigInteger decryptMsg = Alice.EncryptMsg (Alice.D,Alice.N,cryptMsg);
 
         StringBuffer hexString = new StringBuffer();
-        byte[] dataByte =  df.array();
+
+        byte[] dataByte = decryptMsg.toByteArray ();
 
         for(int i = 0;i<dataByte.length;i++)
         {
-
             hexString.append(Integer.toHexString(0xFF & dataByte[i]));
         }
         System.out.println("Hex format : " + hexString.toString());
+        System.out.println ("RSA test: " + decryptMsg.equals(new BigInteger(ld.array ())));
 
         GOST_DS A = new GOST_DS(GOSTgenParams(512));
         BigInteger[] RS = A.CreateSign(new BigInteger(ld.array()));
-        System.out.println(A.VerifySign(RS,new BigInteger(ld.array())));
+        System.out.println("GOST test: " + A.VerifySign(RS,new BigInteger(ld.array())));
 
 
 
