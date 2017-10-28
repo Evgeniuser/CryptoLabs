@@ -2,6 +2,7 @@ package Lab3;
 
 
 import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Random;
 
 import static Lab1.MyMath.*;
@@ -10,11 +11,14 @@ import static java.math.BigInteger.probablePrime;
 
 public class RSA_agent
 {
-    private long P;
-    private long Q;
+    //private long P;
+    //private long Q;
     private long C;
     private long Fi;
 
+    private BigInteger Q;
+    private BigInteger P;
+    private SecureRandom rnd = new SecureRandom();
     public long N;
     public long D;
     public String name;
@@ -22,18 +26,16 @@ public class RSA_agent
     RSA_agent(String name)
     {
         this.name = name;
+        Q = new BigInteger(String.valueOf(probablePrime(512 , rnd)));
+        P = new BigInteger(String.valueOf(probablePrime(512 , rnd)));
 
-        Random rnd = new Random();
-        BigInteger a = new BigInteger(String.valueOf(probablePrime(16 , rnd)));
-        P = a.longValue();
-        Q = a.longValue();
 
         while(true)
         {
-            if(P == Q)
+            if(P.equals(Q))
             {
-                a = new BigInteger(String.valueOf(probablePrime(16, rnd)));
-                Q = a.longValue();
+                Q = new BigInteger(String.valueOf(probablePrime(512 , rnd)));
+                P = new BigInteger(String.valueOf(probablePrime(512 , rnd)));
             }
             break;
         }
