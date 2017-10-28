@@ -46,7 +46,7 @@ public class Elgama_DS {
 
         gen:
         try {
-            invk = k.modInverse (Fi);
+            invk = k.modInverse(Fi);
         }
         catch (ArithmeticException e)
         {
