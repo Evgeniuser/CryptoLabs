@@ -346,4 +346,34 @@ public class HelpfulFunc {
 
         return pqa;
     }
+
+    public static BigInteger[] GenPG2(int bitLen)
+    {
+        BigInteger[] pair = new BigInteger[2];
+
+        BigInteger P;
+        BigInteger G;
+        BigInteger Q;
+
+        Q = BigInteger.probablePrime (bitLen,Srandom);
+        P = Q.multiply(TWO).add(ONE);
+
+        while(!P.isProbablePrime (50))
+        {
+            Q = BigInteger.probablePrime (bitLen,Srandom);
+            P = Q.multiply(TWO).add(ONE);
+        }
+
+        G = new BigInteger(P.subtract(ONE).bitLength (),Srandom);
+
+        while(G.modPow (Q,P).compareTo (ONE)==0)
+        {
+            G = new BigInteger(P.subtract(ONE).bitLength (),Srandom);
+        }
+
+        pair[0] = P;
+        pair[1] = G;
+
+        return pair;
+    }
 }

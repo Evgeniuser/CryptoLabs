@@ -1,46 +1,62 @@
+
 package Lab3;
 
-import static Lab1.MyMath.AdvanceGcd;
-import static Lab1.MyMath.gcd;
-import static Lab1.MyMath.modPow2;
-import static java.lang.Math.random;
+import java.math.BigInteger;
+import java.security.SecureRandom;
+
+import static java.math.BigInteger.ONE;
+import static java.math.BigInteger.ZERO;
 
 public class Elgama_DS {
 
-    private long X;
-    long P;
-    long G;
-    long Y;
-    private long k;
-    String name;
+    BigInteger P;
+    BigInteger G;
+    BigInteger Y;
 
+    private BigInteger X;
+    private SecureRandom Srnd = new SecureRandom();
+    private BigInteger Fi;
+    Elgama_DS(BigInteger p,BigInteger g)
+    {
+        this.P = p;
+        this.G = g;
 
-    Elgama_DS(long p, long g, String name) {
-        P = p;
-        G = g;
-        X = 1+(long)(random()*(P-1));
-        Y = modPow2(G,X,P);
-        this.name = name;
+        X = new BigInteger (P.subtract(ONE).bitLength (),Srnd);
+        Y = G.modPow(X,P);
+        Fi = P.subtract(ONE);
     }
 
-    public long generateR()
+
+    public BigInteger[] CreateSign(BigInteger msg)
     {
-        k = (long)(random()*(P-2))+1;
-        while(true)
+        BigInteger[] signPair = new BigInteger[2];
+        BigInteger k = new BigInteger(Fi.bitLength (),Srnd);
+        while(k.gcd(P).compareTo(ONE)!=0)
         {
-            if(gcd(P-1,k)==1) break;
-            else k = (long)(random()*(P-2))+1;
+            k = new BigInteger(Fi.bitLength (),Srnd);
         }
-        return modPow2(G,k,P);
+        BigInteger r = G.modPow(k,P);
+        /* TODO: fix java.lang.ArithmeticException: BigInteger not invertible. */
+        BigInteger invk = k.modInverse(Fi);
+
+        BigInteger s = msg.subtract(X.multiply(r))
+                          .multiply(invk)
+                          .mod(Fi);
+
+        if(s.compareTo(ZERO)==0) s.add(Fi);
+
+        signPair[0] = r;
+        signPair[1] = s;
+        return signPair;
     }
 
-    long CryptS(long msg,long r)
+    public boolean VerifySign(BigInteger msg,BigInteger[] pair,BigInteger Y)
     {
-        long S = (msg-(X*r))*AdvanceGcd(P-1,k)%(P-1);
-        if(S<0) S+=(P-1);
-        return S;
+        BigInteger Check = Y.modPow(pair[0],P).multiply(pair[0].modPow(pair[1],P)).mod(P);
+        return Check.equals(G.modPow(msg,P));
     }
 
-
-
+    public BigInteger getY() {
+        return Y;
+    }
 }

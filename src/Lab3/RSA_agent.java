@@ -26,18 +26,18 @@ public class RSA_agent
     public BigInteger N;
     public String name;
 
-    RSA_agent(String name)
+    RSA_agent(String name,int sizeKey)
     {
         this.name = name;
-        Q = new BigInteger(String.valueOf(probablePrime(512 , rnd)));
-        P = new BigInteger(String.valueOf(probablePrime(512 , rnd)));
+        Q = new BigInteger(String.valueOf(probablePrime(sizeKey , rnd)));
+        P = new BigInteger(String.valueOf(probablePrime(sizeKey , rnd)));
 
         while(true)
         {
             if(Q.compareTo(P)==0)
             {
-                Q = new BigInteger(String.valueOf(probablePrime(512 , rnd)));
-                P = new BigInteger(String.valueOf(probablePrime(512 , rnd)));
+                Q = new BigInteger(String.valueOf(probablePrime(sizeKey , rnd)));
+                P = new BigInteger(String.valueOf(probablePrime(sizeKey , rnd)));
             }
             break;
         }
