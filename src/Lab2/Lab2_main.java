@@ -17,7 +17,7 @@ public class Lab2_main {
 
         //RSA Begin
 
-        ByteBuffer InBuffer = ReadFile("test.txt").position(0);
+        ByteBuffer InBuffer = ReadFile("test.txt",false).position(0);
         ByteBuffer OutBuffer = ByteBuffer.allocate(InBuffer.limit()*8);
         RSA_agent Alice = new RSA_agent("Alice");
         RSA_agent Bob = new RSA_agent("Bob");
@@ -36,7 +36,7 @@ public class Lab2_main {
 
         WriteFile("RSA_crypt.txt",OutBuffer.array(),false);
         InBuffer.clear();
-        InBuffer = ReadFile("RSA_crypt.txt").position(0);
+        InBuffer = ReadFile("RSA_crypt.txt",false).position(0);
         OutBuffer= ByteBuffer.allocate(InBuffer.limit()/4);
         OutBuffer.position(0);
         t = InBuffer.capacity();
@@ -64,7 +64,7 @@ public class Lab2_main {
         long r = A.CrtSessionKey();
         long crt = A.Crypt(tst,B.getY());
         System.out.println("Elgam test: " + tst + " " + crt + " " + B.Decrypt(r, crt));
-        InBuffer = ReadFile("test.txt").position(0);
+        InBuffer = ReadFile("test.txt",false).position(0);
         OutBuffer.clear();
 
         t = InBuffer.limit();
@@ -82,7 +82,7 @@ public class Lab2_main {
 
         WriteFile("Elgam_crypt.txt",OutBuffer.array(),false);
         InBuffer.clear();
-        InBuffer = ReadFile("Elgam_crypt.txt").position(0);
+        InBuffer = ReadFile("Elgam_crypt.txt",false).position(0);
         OutBuffer.clear();
         t = InBuffer.limit();
         OutBuffer = ByteBuffer.allocate(InBuffer.limit()/8);
@@ -111,7 +111,7 @@ public class Lab2_main {
         System.out.println("Shamir test: " + tst + " " + tst1);
 
         InBuffer.clear();
-        InBuffer = ReadFile("test.txt").position(0);
+        InBuffer = ReadFile("test.txt",false).position(0);
         t = InBuffer.limit();
         OutBuffer.clear();
         OutBuffer = ByteBuffer.allocate(InBuffer.limit());

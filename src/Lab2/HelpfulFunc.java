@@ -1,10 +1,7 @@
 package Lab2;
 
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
@@ -27,18 +24,37 @@ public class HelpfulFunc {
     private static Random rnd = new Random(17);
     private static SecureRandom Srandom = new SecureRandom();
 
-    static ByteBuffer ReadFile(String FileName) throws IOException
+    public static ByteBuffer ReadFile(String FileName,boolean isSign) throws IOException
     {
         RandomAccessFile as = new RandomAccessFile(FileName,"r");
         FileChannel fl = as.getChannel();
-        //System.out.println("Размер файла: " + fl.size()+ " байт(а)");
-        ByteBuffer InBuffer = ByteBuffer.allocate((int)fl.size()+1);
-        fl.read(InBuffer);
-        fl.close();
+        ByteBuffer InBuffer;
+        if(!isSign)
+        {
+            InBuffer = ByteBuffer.allocate ((int) fl.size () + 1);
+            fl.read(InBuffer);
+            fl.close();
+            InBuffer.position (0);
+        }
+        else {
+            InBuffer = ByteBuffer.allocate ((int) fl.size());
+            fl.read(InBuffer);
+            fl.close();
+            InBuffer.position (0);
+        }
+
         return InBuffer;
     }
+    public static String ReadFile(String FileName) throws IOException
+    {
 
-    static int WriteFile(String FileName,byte[] buffer,boolean wrFlg) throws IOException
+        BufferedReader in = new BufferedReader(new FileReader (FileName));
+        String Buffer;
+        Buffer = in.readLine ();
+        return Buffer;
+    }
+
+    public static int WriteFile(String FileName,byte[] buffer,boolean wrFlg) throws IOException
     {
         FileOutputStream fout = new FileOutputStream(FileName);
         if(wrFlg)
@@ -49,6 +65,14 @@ public class HelpfulFunc {
         fout.close();
 
         return 0;
+    }
+
+    public static void WriteFile(String FileName,String buffer) throws IOException
+    {
+        FileOutputStream fout = new FileOutputStream(FileName);
+        BufferedWriter out = new BufferedWriter(new FileWriter(FileName));
+        out.write(buffer);
+        out.close();
     }
 
     static ArrayList<Long> GenPG(int BitLen)

@@ -19,6 +19,7 @@ public class Elgama_DS {
     private BigInteger k;
     private BigInteger r;
     BigInteger invk;
+
     Elgama_DS(BigInteger p,BigInteger g)
     {
         this.P = p;
@@ -35,17 +36,17 @@ public class Elgama_DS {
         {
             k = new BigInteger(Fi.bitLength (),Srnd);
         }
-        r = G.modPow(k,P);
+
     }
 
     public BigInteger[] CreateSign(BigInteger msg)
     {
         BigInteger[] signPair = new BigInteger[2];
-        invk = new BigInteger("0");
-        CrtRK();
 
         gen:
+
         try {
+            CrtRK();
             invk = k.modInverse(Fi);
         }
         catch (ArithmeticException e)
@@ -54,6 +55,8 @@ public class Elgama_DS {
             CrtRK();
             break gen;
         }
+
+        r = G.modPow(k,P);
         BigInteger s = msg.subtract(X.multiply(r))
                           .multiply(invk)
                           .mod(Fi);
