@@ -20,5 +20,6 @@ Lab3 includes the next DS algorithms
   - GOST R-34.10-94
   - RSA
   - Elgama
-All signatures can be saved in files.
+  
+  All signatures can be saved in files.
   
