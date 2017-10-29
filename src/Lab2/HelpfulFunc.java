@@ -114,7 +114,7 @@ public class HelpfulFunc {
     public static ByteBuffer getHash(String filename) throws Exception
     {
         ByteBuffer HashStr;
-        MessageDigest md = MessageDigest.getInstance("SHA-1");
+        MessageDigest md = MessageDigest.getInstance("SHA-256");
         FileInputStream fl = new FileInputStream(filename);
 
         byte[] dataByte = new byte[fl.available()];
