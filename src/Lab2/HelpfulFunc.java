@@ -400,4 +400,47 @@ public class HelpfulFunc {
 
         return pair;
     }
+
+    public static BigInteger[] SlowGOSTParam()
+    {
+        BigInteger[] PQA = new BigInteger[3];
+
+        BigInteger P;
+        BigInteger Q;
+        BigInteger B;
+        BigInteger A;
+        BigInteger D;
+        Random rnd = new Random ();
+        byte[] ar = new byte[256];
+        rnd.nextBytes (ar);
+        Q = BigInteger.probablePrime (256,new Random ());
+        B = new BigInteger (ar);
+
+        P = Q.multiply (B).add (BigInteger.ONE);
+        while(!P.isProbablePrime (1))
+        {
+            rnd.nextBytes (ar);
+            Q = BigInteger.probablePrime (256,new Random ());
+            B = new BigInteger (ar);
+            P = Q.multiply (B).add (BigInteger.ONE);
+        }
+        System.out.println (P.isProbablePrime (1));
+
+        ar = new byte[P.subtract (BigInteger.ONE).bitLength()];
+        rnd.nextBytes (ar);
+        D = new BigInteger(ar);
+        A = D.modPow (B, P);
+
+        while(A.modPow (Q,P).compareTo (BigInteger.ONE)!=0) {
+            rnd.nextBytes (ar);
+            D = new BigInteger(ar);
+            A = D.modPow (B, P);
+        }
+
+        PQA[0] = P;
+        PQA[1] = Q;
+        PQA[2] = A;
+
+        return PQA;
+    }
 }

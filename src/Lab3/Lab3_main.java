@@ -18,7 +18,8 @@ public class Lab3_main {
         RSA_agent Alice = new RSA_agent("Alice",256);
         RSA_agent Bob = new RSA_agent ("Bob",256);
 
-        GOST_DS A = new GOST_DS(GOSTgenParams(512));
+        GOST_DS A = new GOST_DS(GOSTgenParams(1024));
+        GOST_DS G = new GOST_DS(SlowGOSTParam ());
 
         BigInteger[] pair = GenPG2(128);
         Elgama_DS TST1 = new Elgama_DS(pair[0],pair[1]);
@@ -64,6 +65,9 @@ public class Lab3_main {
         System.out.println("GOST test: " + A.VerifySign(RS,new BigInteger(ld.array())));
         System.out.println("GOST-FILE test: " + A.VerifySign(Q,new BigInteger(ld.array())));
 
+
+        G.VerifySign (G.CreateSign(new BigInteger(ld.array())),new BigInteger(ld.array()));
+        System.out.println ("Slow GOST test: "+G.VerifySign (G.CreateSign(new BigInteger(ld.array())),new BigInteger(ld.array())));
 
         BigInteger[] crypt = TST1.CreateSign(new BigInteger(ld.array ()));
         test = crypt[0].toString() + "\t" + crypt[1].toString();
