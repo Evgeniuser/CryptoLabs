@@ -431,9 +431,9 @@ public class HelpfulFunc {
         D = new BigInteger(ar);
         A = D.modPow (B, P);
 
-        while(A.modPow (Q,P).compareTo (BigInteger.ONE)!=0) {
+        while(A.modPow (Q,P).compareTo (BigInteger.ONE)!=0 && A.equals (ONE)) {
             rnd.nextBytes (ar);
-            D = new BigInteger(ar);
+            D = new BigInteger(64,rnd);
             A = D.modPow (B, P);
         }
 
