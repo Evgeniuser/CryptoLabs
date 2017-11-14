@@ -10,7 +10,7 @@ public class MyMath {
 
     public static long modPow2(long a,long b, long n)
     {
-        long x=1,y=a;
+        long x = 1,y = a;
 
         while(b > 0){
             if(b%2 == 1){

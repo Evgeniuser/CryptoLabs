@@ -63,12 +63,12 @@ public class RSA_agent
 
     public BigInteger getD() {return D;}
 
-    public BigInteger EncryptMsg(BigInteger D, BigInteger N, BigInteger msg)
+    public BigInteger VerifySign(BigInteger D, BigInteger N, BigInteger msg)
     {
         return msg.modPow(D,N);
     }
 
-    public BigInteger DecryptMsg(BigInteger msg)
+    public BigInteger CreateSign(BigInteger msg)
     {
         return msg.modPow(this.C, this.N);
     }

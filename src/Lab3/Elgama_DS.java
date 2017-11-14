@@ -43,17 +43,14 @@ public class Elgama_DS {
     {
         BigInteger[] signPair = new BigInteger[2];
 
-        gen:
+
 
         try {
             CrtRK();
             invk = k.modInverse(Fi);
         }
-        catch (ArithmeticException e)
-        {
+        catch (ArithmeticException e) {
             System.out.println(e);
-            CrtRK();
-            break gen;
         }
 
         r = G.modPow(k,P);
